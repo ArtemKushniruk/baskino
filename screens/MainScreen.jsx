@@ -1,23 +1,26 @@
-import React, { useState } from 'react';
-import AnimatedLoader from 'react-native-animated-loader';
+import React from 'react';
 import useGetFilmList from '../hooks/useGetFilmList';
 import FilmCard from '../components/FilmCard';
 import {
   StyleSheet,
-  SafeAreaView,
-  ScrollView,
   StatusBar,
-  Text
+  Text,
+  FlatList,
+  View,
 } from 'react-native';
 import useFonts from '../hooks/useFonst';
+
+const renderItem = ({ item }) => {
+  return <FilmCard film={item} key={item.id}/>;
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: StatusBar.currentHeight,
-    backgroundColor: '#181a20'
+    backgroundColor: '#181a20',
+    paddingHorizontal: 20
   },
-  scrollView: { paddingHorizontal: 20 },
   text: {
     color: 'white',
     textAlign: 'center',
@@ -25,48 +28,36 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins-ExtraBold',
     margin: 62,
   },
-  input: {
-    borderRadius: 12,
-    height: 40,
-    borderWidth: 1,
-    margin: 12,
-    padding: 5,
-    color: '#fff'
-  },
-  lottie: {
-    width: 100,
-    height: 100,
-  },
   trending: {
     color: 'white',
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 12,
-    fontFamily: 'Poppins-Bold'
-  }
+    fontFamily: 'Poppins-Bold',
+  },
 });
 
+const {container, text, trending} = styles
+
 export default function MainScreen() {
-  useFonts()
-  const { films, loading } = useGetFilmList();
+  const {loaded} = useFonts()
+  const [films, fetchMore] = useGetFilmList();
+
+  if (!loaded) {
+    return null;
+  }
 
   return (
-    <SafeAreaView style={styles.container}>
-      
-      <ScrollView style={styles.scrollView}>
-      <Text style={styles.text}>Baskino</Text>
-      <Text style={styles.trending}>Trending now</Text>
-        {loading ? (
-          <AnimatedLoader
-            visible={true}
-            source={require('../assets/loader.json')}
-            animationStyle={styles.lottie}
-            speed={1}
-          />
-        ) : (
-          films.results.map((film) => <FilmCard film={film} key={film.id} />)
-        )}
-      </ScrollView>
-    </SafeAreaView>
+    <View style={container}>
+      <Text style={text}>Baskino</Text>
+      <Text style={trending}>Trending now</Text>
+        <FlatList
+          data={films}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id}
+          onEndReachedThreshold={0.9}
+          onEndReached={fetchMore}
+        />
+    </View>
   );
 }

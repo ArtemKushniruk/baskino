@@ -1,7 +1,7 @@
 import { useFonts as _useFonts } from 'expo-font';
 
 export default function useFonts() {
-  _useFonts({
+    const [loaded] = _useFonts({
     'Poppins-Black': require('../assets/fonts/Poppins-Black.ttf'),
     'Poppins-BlackItalic': require('../assets/fonts/Poppins-BlackItalic.ttf'),
     'Poppins-Bold': require('../assets/fonts/Poppins-Bold.ttf'),
@@ -21,4 +21,5 @@ export default function useFonts() {
     'Poppins-Thin': require('../assets/fonts/Poppins-Thin.ttf'),
     'Poppins-ThinItalic': require('../assets/fonts/Poppins-ThinItalic.ttf'),
   });
+  return {loaded}
 }

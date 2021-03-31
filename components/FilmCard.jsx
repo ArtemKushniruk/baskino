@@ -1,6 +1,5 @@
 import React from 'react';
-import { View, Image, Text, StyleSheet } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+import { View, Image, Text, StyleSheet, Item, TouchableOpacity } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import useGenres from '../hooks/useGenres';
 import useFonts from '../hooks/useFonst'
@@ -51,13 +50,13 @@ const styles = StyleSheet.create({
   },
 });
 
-const { container, rating, textContainer, genres, image } = styles;
+const { container, rating, textContainer, genres, image, text } = styles;
 
 export default function FilmCard({ film }) {
   useFonts()
 
   return (
-    <View style={container}>
+    <TouchableOpacity onPress={()=> console.log('bimba')} style={container}>
       <Image
         source={{
           uri: `https://image.tmdb.org/t/p/w500${film.poster_path}`,
@@ -70,14 +69,14 @@ export default function FilmCard({ film }) {
         style={image}
       />
       <View style={textContainer}>
-        <Text style={styles.text}>{film.title}</Text>
+        <Text style={text}>{film.title}</Text>
         <Text style={genres}>{useGenres(film.genre_ids)}</Text>
         <Text style={rating}>
           <MaterialCommunityIcons name="star" color={'yellow'} size={20} />
           {film.vote_average}
         </Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 }
 
