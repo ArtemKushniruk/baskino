@@ -7,17 +7,23 @@ import {
   SafeAreaView,
   ScrollView,
   StatusBar,
-  TextInput,
+  Text
 } from 'react-native';
+import useFonts from '../hooks/useFonst';
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: StatusBar.currentHeight,
+    backgroundColor: '#181a20'
   },
   scrollView: { paddingHorizontal: 20 },
   text: {
+    color: 'white',
+    textAlign: 'center',
     fontSize: 26,
+    fontFamily: 'Poppins-ExtraBold',
+    margin: 62,
   },
   input: {
     borderRadius: 12,
@@ -25,30 +31,34 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     margin: 12,
     padding: 5,
+    color: '#fff'
   },
   lottie: {
     width: 100,
     height: 100,
   },
+  trending: {
+    color: 'white',
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 12,
+    fontFamily: 'Poppins-Bold'
+  }
 });
 
 export default function MainScreen() {
+  useFonts()
   const { films, loading } = useGetFilmList();
-  const [text, onChangeText] = useState('');
 
   return (
     <SafeAreaView style={styles.container}>
-      <TextInput
-        style={styles.input}
-        onChangeText={onChangeText}
-        value={text}
-        placeholder="Search..."
-      />
+      
       <ScrollView style={styles.scrollView}>
+      <Text style={styles.text}>Baskino</Text>
+      <Text style={styles.trending}>Trending now</Text>
         {loading ? (
           <AnimatedLoader
-            visible={loading}
-            overlayColor="rgba(255,255,255,0.75)"
+            visible={true}
             source={require('../assets/loader.json')}
             animationStyle={styles.lottie}
             speed={1}

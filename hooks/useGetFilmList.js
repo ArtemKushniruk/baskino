@@ -13,7 +13,7 @@ export default function useGetFilmList() {
     }).then((res) => {
       if (res.data.results.length !== 0) {
         setFilms(res.data);
-        setTimeout(() => setLoading(false), 1000)
+        setTimeout(() => setLoading(false), 2000)
       }
     });
   }, []);

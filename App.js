@@ -4,7 +4,7 @@ import BottomNavigation from './navigation'
 
 export default function App() {
   return (
-    <NavigationContainer>
+    <NavigationContainer theme={{colors: '#171920'}}>
       <BottomNavigation />
     </NavigationContainer>
   );
