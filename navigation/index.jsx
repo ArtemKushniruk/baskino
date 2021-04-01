@@ -2,7 +2,7 @@ import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import MainScreen from '../screens/MainScreen';
 import FavoritesScreem from '../screens/FavoritesScreen';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import SearchScreen from '../screens/SearchScreen'
 import { AntDesign } from '@expo/vector-icons';
 
 const Tab = createBottomTabNavigator();
@@ -27,12 +27,21 @@ export default function BottomNavigation() {
         }}
       />
       <Tab.Screen
+        name="Search"
+        component={SearchScreen}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <AntDesign name="search1" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen
         name="Favorites"
         component={FavoritesScreem}
         options={{
           tabBarLabel: 'Favorites',
           tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="star" color={color} size={size} />
+            <AntDesign name="staro" size={size} color={color} />
           ),
         }}
       />
