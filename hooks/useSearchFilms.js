@@ -12,11 +12,15 @@ export default function useSearchFilms(keywords) {
   useEffect(() => {
     setFilms([]);
     setPage(1);
-    setShouldFetch(true)
+    setShouldFetch(true);
   }, [keywords]);
 
   useEffect(() => {
     if (!shouldFetch) {
+      return;
+    }
+
+    if (!keywords) {
       return;
     }
 

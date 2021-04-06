@@ -1,8 +1,8 @@
 import React from 'react';
-import { View, Image, Text, StyleSheet, Item, TouchableOpacity } from 'react-native';
+import { View, Image, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import useGenres from '../hooks/useGenres';
-import useFonts from '../hooks/useFonst'
+import useFonts from '../hooks/useFonts';
 
 const styles = StyleSheet.create({
   container: {
@@ -11,12 +11,12 @@ const styles = StyleSheet.create({
     height: 200,
     width: '100%',
     paddingTop: 12,
-    paddingBottom: 12
+    paddingBottom: 12,
   },
   text: {
     fontSize: 20,
     color: '#fff',
-    fontFamily: 'Poppins-Bold'
+    fontFamily: 'Poppins-Bold',
   },
   background: {
     position: 'absolute',
@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 20,
     textAlign: 'right',
-    fontFamily: 'Poppins-Regular'
+    fontFamily: 'Poppins-Regular',
   },
   textContainer: {
     display: 'flex',
@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
   genres: {
     fontSize: 14,
     color: '#fff',
-    fontFamily: 'Poppins-Regular'
+    fontFamily: 'Poppins-Regular',
   },
   image: {
     width: '30%',
@@ -52,11 +52,14 @@ const styles = StyleSheet.create({
 
 const { container, rating, textContainer, genres, image, text } = styles;
 
-export default function FilmCard({ film }) {
-  useFonts()
+export default function FilmCard({ film, navigate, component }) {
+  useFonts();
 
   return (
-    <TouchableOpacity onPress={()=> console.log('bimba')} style={container}>
+    <TouchableOpacity
+      onPress={() => navigate(component, { id: film.id, name: film.title })}
+      style={container}
+    >
       <Image
         source={{
           uri: `https://image.tmdb.org/t/p/w500${film.poster_path}`,
@@ -79,5 +82,3 @@ export default function FilmCard({ film }) {
     </TouchableOpacity>
   );
 }
-
-

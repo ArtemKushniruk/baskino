@@ -1,6 +1,8 @@
 import React, { useRef } from 'react';
+import { AntDesign } from '@expo/vector-icons';
 import useGetFilmList from '../hooks/useGetFilmList';
 import FilmCard from '../components/FilmCard';
+import useFonts from '../hooks/useFonts';
 import {
   StyleSheet,
   StatusBar,
@@ -9,12 +11,6 @@ import {
   View,
   Pressable,
 } from 'react-native';
-import useFonts from '../hooks/useFonst';
-import { AntDesign } from '@expo/vector-icons';
-
-const renderItem = ({ item }) => {
-  return <FilmCard film={item} key={item.id} />;
-};
 
 const styles = StyleSheet.create({
   container: {
@@ -53,35 +49,38 @@ const styles = StyleSheet.create({
 
 const { container, text, trending, button } = styles;
 
-export default function MainScreen() {
+export default function MainScreen({ navigation }) {
   const { loaded } = useFonts();
   const [films, fetchMore] = useGetFilmList();
-
   const flatlistRef = useRef();
-
-  const onPressFunction = () => {
-    flatlistRef.current.scrollToOffset({ offset: 0 });
-  };
+  const { navigate } = navigation;
 
   if (!loaded) {
     return null;
   }
 
   return (
-    <View style={container}>
-      <Text style={text}>Baskino</Text>
-      <FlatList
-        ref={flatlistRef}
-        data={films}
-        ListHeaderComponent={() => <Text style={trending}>Trending now</Text>}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.id}
-        onEndReachedThreshold={0.9}
-        onEndReached={fetchMore}
-      />
-      <Pressable style={button} onPress={onPressFunction}>
-        <AntDesign name="up" size={20} color="white" />
-      </Pressable>
-    </View>
+    <>
+      <View style={container}>
+        <Text style={text}>Baskino</Text>
+        <FlatList
+          ref={flatlistRef}
+          data={films}
+          ListHeaderComponent={() => <Text style={trending}>Trending now</Text>}
+          renderItem={({ item }) => (
+            <FilmCard film={item} navigate={navigate} component='FilmDetail' />
+          )}
+          keyExtractor={(item) => item.id.toString()}
+          onEndReachedThreshold={0.9}
+          onEndReached={fetchMore}
+        />
+        <Pressable
+          style={button}
+          onPress={() => flatlistRef.current.scrollToOffset({ offset: 0 })}
+        >
+          <AntDesign name="up" size={20} color="white" />
+        </Pressable>
+      </View>
+    </>
   );
 }

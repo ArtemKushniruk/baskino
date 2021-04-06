@@ -1,50 +1,96 @@
 import React from 'react';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createStackNavigator } from '@react-navigation/stack';
+import FilmDetailScreen from '../screens/FilmDetailScreen';
+import SearchScreen from '../screens/SearchScreen';
 import MainScreen from '../screens/MainScreen';
-import FavoritesScreem from '../screens/FavoritesScreen';
-import SearchScreen from '../screens/SearchScreen'
-import { AntDesign } from '@expo/vector-icons';
+import FavoritesScreen from '../screens/FavoritesScreen';
+import useFonts from '../hooks/useFonts';
 
-const Tab = createBottomTabNavigator();
+const Stack = createStackNavigator();
 
-export default function BottomNavigation() {
+function MainScreenNav() {
+  const { loaded } = useFonts();
+
+  if (!loaded) {
+    return null;
+  }
+
   return (
-    <Tab.Navigator
-      tabBarOptions={{
-        showLabel: false,
-        activeTintColor: '#4150bd',
-        inactiveTintColor: '#5d5f64',
-        style: { backgroundColor: '#171920' },
-      }}
-    >
-      <Tab.Screen
+    <Stack.Navigator>
+      <Stack.Screen
         name="Home"
         component={MainScreen}
-        options={{
-          tabBarIcon: ({ color, size }) => (
-            <AntDesign name="home" size={size} color={color} />
-          ),
-        }}
+        options={{ headerShown: false }}
       />
-      <Tab.Screen
-        name="Search"
-        component={SearchScreen}
-        options={{
-          tabBarIcon: ({ color, size }) => (
-            <AntDesign name="search1" size={size} color={color} />
-          ),
-        }}
+      <Stack.Screen
+        name="FilmDetail"
+        component={FilmDetailScreen}
+        options={({ route }) => ({
+          headerStyle: { backgroundColor: '#181a20' },
+          headerTintColor: '#fff',
+          title: route.params.name,
+          headerTitleStyle: {
+            fontFamily: 'Poppins-Bold',
+          },
+          headerBackTitleVisible: false,
+        })}
       />
-      <Tab.Screen
-        name="Favorites"
-        component={FavoritesScreem}
-        options={{
-          tabBarLabel: 'Favorites',
-          tabBarIcon: ({ color, size }) => (
-            <AntDesign name="staro" size={size} color={color} />
-          ),
-        }}
-      />
-    </Tab.Navigator>
+    </Stack.Navigator>
   );
 }
+
+export { MainScreenNav };
+
+function SearchScreenNav() {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="Search"
+        component={SearchScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="SearchDetail"
+        component={FilmDetailScreen}
+        options={({ route }) => ({
+          headerStyle: { backgroundColor: '#181a20' },
+          headerTintColor: '#fff',
+          title: route.params.name,
+          headerTitleStyle: {
+            fontFamily: 'Poppins-Bold',
+          },
+          headerBackTitleVisible: false,
+        })}
+      />
+    </Stack.Navigator>
+  );
+}
+
+export { SearchScreenNav };
+
+function FavoritesScreenNav() {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="Favorites"
+        component={FavoritesScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="FavoritesDetail"
+        component={FilmDetailScreen}
+        options={({ route }) => ({
+          headerStyle: { backgroundColor: '#181a20' },
+          headerTintColor: '#fff',
+          title: route.params.name,
+          headerTitleStyle: {
+            fontFamily: 'Poppins-Bold',
+          },
+          headerBackTitleVisible: false,
+        })}
+      />
+    </Stack.Navigator>
+  );
+}
+
+export { FavoritesScreenNav };

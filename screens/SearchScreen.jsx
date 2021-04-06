@@ -10,12 +10,8 @@ import {
   Pressable,
   Text,
 } from 'react-native';
-import useFonts from '../hooks/useFonst';
+import useFonts from '../hooks/useFonts';
 import { AntDesign } from '@expo/vector-icons';
-
-const renderItem = ({ item }) => {
-  return <FilmCard film={item} key={item.id} />;
-};
 
 const styles = StyleSheet.create({
   container: {
@@ -71,16 +67,12 @@ const styles = StyleSheet.create({
 
 const { container, text, trending, button, foundContainer, foundText } = styles;
 
-export default function SearchScreen() {
+export default function SearchScreen({navigation}) {
   const { loaded } = useFonts();
   const [search, setSearch] = useState('');
   const [films, fetchMore] = useSearchFilms(search);
-
   const flatlistRef = useRef();
-
-  const onPressFunction = () => {
-    flatlistRef.current.scrollToOffset({ offset: 0 });
-  };
+  const { navigate } = navigation
 
   if (!loaded) {
     return null;
@@ -99,8 +91,8 @@ export default function SearchScreen() {
         <FlatList
           ref={flatlistRef}
           data={films}
-          renderItem={renderItem}
-          keyExtractor={(item) => item.id}
+          renderItem={({item}) => <FilmCard film={item} navigate={navigate} component='SearchDetail' />}
+          keyExtractor={(item) => item.id.toString()}
           onEndReachedThreshold={0.9}
           onEndReached={fetchMore}
         />
@@ -110,7 +102,7 @@ export default function SearchScreen() {
           <Text style={foundText}>Nothing Found...</Text>
         </View>
       )}
-      <Pressable style={button} onPress={onPressFunction}>
+      <Pressable style={button} onPress={() => flatlistRef.current.scrollToOffset({ offset: 0 })}>
         <AntDesign name="up" size={20} color="white" />
       </Pressable>
     </View>
