@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -6,8 +6,11 @@ import {
   StyleSheet,
   SafeAreaView,
   ScrollView,
+  TouchableOpacity,
 } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import useGetFilmDetails from '../hooks/useGetFilmDetails';
 import useFonts from '../hooks/useFonts';
 import useGenres from '../hooks/useGenres';
@@ -66,23 +69,51 @@ const styles = StyleSheet.create({
   },
 });
 
-const {
-  container,
-  wrapper,
-  title,
-  text,
-  desc,
-  item,
-  image,
-} = styles;
+const { container, wrapper, title, text, desc, item, image } = styles;
+
 export default function FilmDetailScreen({ route }) {
   const { id } = route.params;
   const { loaded } = useFonts();
   const [details, credits, videos] = useGetFilmDetails(id);
+  const [favorite, setFavorite] = useState(false);
 
   if (!loaded) {
     return null;
   }
+
+  const getFavorites = async () => {
+    let favorites = JSON.parse(await AsyncStorage.getItem('@Favorites'));
+    const sourse = favorites.find((e) => e.id === id);
+    if (sourse) {
+      setFavorite(true);
+    } else {
+      setFavorite(false);
+    }
+  };
+
+  getFavorites();
+
+  const storeData = async (film) => {
+    try {
+      let favorites = JSON.parse(await AsyncStorage.getItem('@Favorites'));
+
+      if (favorites) {
+        const sourse = favorites.find((e) => e.id === film.id);
+        if (sourse) {
+          favorites = favorites.filter((e) => e.id !== film.id);
+        } else {
+          favorites.push(film);
+        }
+      } else {
+        favorites = [film];
+      }
+
+      await AsyncStorage.setItem('@Favorites', JSON.stringify(favorites));
+      getFavorites();
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   const ids = [];
   details.genres ? details.genres.map((genre) => ids.push(genre.id)) : null;
@@ -104,7 +135,22 @@ export default function FilmDetailScreen({ route }) {
             style={image}
           />
           <View style={wrapper}>
-            <Text style={title}>{details.title}</Text>
+            <View
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+              }}
+            >
+              <Text style={title}>{details.title}</Text>
+              <TouchableOpacity onPress={() => storeData(details)}>
+                <AntDesign
+                  name={favorite ? 'star' : 'staro'}
+                  size={24}
+                  color={'#4150bd'}
+                />
+              </TouchableOpacity>
+            </View>
             <View
               style={{
                 display: 'flex',

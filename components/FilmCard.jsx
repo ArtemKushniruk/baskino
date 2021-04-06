@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     width: '70%',
   },
-  genres: {
+  genresStyle: {
     fontSize: 14,
     color: '#fff',
     fontFamily: 'Poppins-Regular',
@@ -50,10 +50,20 @@ const styles = StyleSheet.create({
   },
 });
 
-const { container, rating, textContainer, genres, image, text } = styles;
+const { container, rating, textContainer, genresStyle, image, text } = styles;
 
 export default function FilmCard({ film, navigate, component }) {
   useFonts();
+
+  let genres
+
+  if (film.genres) {
+    const ids = [];
+    film.genres ? film.genres.map((genre) => ids.push(genre.id)) : null;
+    genres = useGenres(ids);
+  } else {
+    genres = useGenres(film.genre_ids)
+  }
 
   return (
     <TouchableOpacity
@@ -73,7 +83,7 @@ export default function FilmCard({ film, navigate, component }) {
       />
       <View style={textContainer}>
         <Text style={text}>{film.title}</Text>
-        <Text style={genres}>{useGenres(film.genre_ids)}</Text>
+        <Text style={genresStyle}>{genres}</Text>
         <Text style={rating}>
           <MaterialCommunityIcons name="star" color={'yellow'} size={20} />
           {film.vote_average}
